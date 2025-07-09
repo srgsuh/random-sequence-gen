@@ -1,4 +1,5 @@
 import _ from "lodash";
+
 export function validate(n, min, max):string[] {
     const errors = [];
     if (!isFinite(n)) {
