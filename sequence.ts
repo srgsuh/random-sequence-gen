@@ -1,43 +1,46 @@
 const DEFAULTS = [7, 1, 49];
 const COUNT_TO_RANGE_RATIO = 0.1;
 
+type numTuple = [number, number, number];
+type testFun = (a: numTuple) => boolean;
+
+const CHECKS:{test: testFun, message: string}[] = [
+    {
+        test: (nums)=> nums.some(v => !Number.isInteger(v)),
+        message: "All arguments must be integer numbers"
+    },
+    {
+        test: (nums)=> nums[0] < 1,
+        message: "The first argument must be a positive integer"
+    },
+    {
+        test: (nums)=> nums[1] > nums[2],
+        message: "The second argument must not be greater than the third argument"
+    },
+    {
+        test: (a)=> a[0] > a[2] - a[1] + 1,
+        message: "The first argument must not exceed the difference between other arguments"
+    }
+];
+
 const inParams = process.argv.slice(2, 5).map(x => +x);
-const params = [...inParams, ...DEFAULTS.slice(inParams.length)];
-const err = validateNumbers(params);
-if (err) {
+const [n, min, max] = [...inParams, ...DEFAULTS.slice(inParams.length)];
+
+const err = validateInputs([n, min, max]);
+if (err)  {
     console.error("Error: ", err);
     process.exit(1);
 }
-const [n, min, max] = params;
-console.log(`Successfully generated ${n} random numbers between ${min} and ${max}:`);
-console.log(generateRandomSequence(n, min, max));
+
+const sequence = generateRandomSequence(n, min, max);
+console.log(`Successfully generated ${n} random numbers between ${min} and ${max}:`, sequence);
 
 function random(min: number, max: number): number {
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-function validateNumbers(nums: number[]):string {
-    const error = nums.map((value, index)=>{
-        if (!Number.isInteger(value)) {
-            return `Argument number ${index + 1} must be an integer number`;
-        }
-        return "";
-    }).filter(x=>x).join("\n");
-    if (error) {
-        return error;
-    }
-
-    const [n, min, max] = nums;
-    if (n < 1) {
-        return `Argument number 1 must be a positive integer`;
-    }
-    if (min > max) {
-        return `Argument number 2 must be less than or equal to the argument number 3`;
-    }
-    if (n > max - min + 1) {
-        return `Argument number 1 must be less than or equal to the difference between the arguments 3 and 2`;
-    }
-    return "";
+function validateInputs(a: numTuple) {
+    return CHECKS.find(check =>check.test(a))?.message || "";
 }
 
 function generateBySelect(n: number, min: number, max: number): number[] {
