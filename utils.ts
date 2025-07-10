@@ -20,6 +20,6 @@ const CHECKS:{test: testFun, message: string}[] = [
     }
 ];
 
-export function validateInputs(a: numTuple) {
-    return CHECKS.find(check =>check.test(a))?.message || "";
+export function validateInputs(inputs: numTuple) {
+    return CHECKS.find(check =>check.test(inputs))?.message || "";
 }
