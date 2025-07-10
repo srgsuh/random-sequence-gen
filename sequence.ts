@@ -1,4 +1,5 @@
 const DEFAULTS = [7, 1, 49];
+const COUNT_TO_RANGE_RATIO = 0.1;
 
 const inParams = process.argv.slice(2, 5).map(x => +x);
 const params = [...inParams, ...DEFAULTS.slice(inParams.length)];
@@ -25,6 +26,7 @@ function validateNumbers(nums: number[]):string {
     if (error) {
         return error;
     }
+
     const [n, min, max] = nums;
     if (n < 1) {
         return `Argument number 1 must be a positive integer`;
@@ -62,7 +64,7 @@ function generateByMemoize(n: number, min: number, max: number): number[] {
 
 function generateRandomSequence(n: number, min: number, max: number): number[] {
     const ratio = n / (max - min + 1);
-    if (ratio < 0.2) {
+    if (ratio < COUNT_TO_RANGE_RATIO) {
         return generateByMemoize(n, min, max);
     }
     return generateBySelect(n, min, max);
