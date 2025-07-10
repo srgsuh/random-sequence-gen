@@ -30,7 +30,8 @@ function validateNumbers(nums: number[]):string {
     return "";
 }
 
-function generateRandomSequence(n: number, min: number, max: number): number[] {
+function generateBySelect(n: number, min: number, max: number): number[] {
+    console.log("Generating by select");
     const length = max - min + 1;
     const numbers = Array.from({length})
         .map((_, i)=>min + i);
@@ -39,6 +40,26 @@ function generateRandomSequence(n: number, min: number, max: number): number[] {
         [numbers[i], numbers[randomIndex]] = [numbers[randomIndex], numbers[i]]; // all chosen numbers in the beginning
     }
     return numbers.slice(0, n);
+}
+
+function generateByMemoize(n: number, min: number, max: number): number[] {
+    console.log("Generating by memoize");
+    const nums = new Set<number>();
+    while (nums.size < n) {
+        const randomNumber = random(min, max);
+        if (!nums.has(randomNumber)) {
+            nums.add(randomNumber);
+        }
+    }
+    return Array.from(nums.values());
+}
+
+function generateRandomSequence(n: number, min: number, max: number): number[] {
+    const ratio = n / (max - min + 1);
+    if (ratio < 0.2) {
+        return generateByMemoize(n, min, max);
+    }
+    return generateBySelect(n, min, max);
 }
 
 
