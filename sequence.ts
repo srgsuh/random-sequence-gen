@@ -1,5 +1,5 @@
-import {validateInputs} from "./utils.js";
-import {generateRandomSequence} from "./rand-sequence-gen.js";
+import {validateInputs} from "./utils.ts";
+import {generateRandomSequence} from "./rand-sequence-gen.ts";
 const DEFAULTS = [7, 1, 49];
 
 
